@@ -67,11 +67,16 @@ void ABaseItem::ActivateItem(AActor* Activator)
 	{
 		FTimerHandle DestroyParticleHandle;
 
+		TWeakObjectPtr<UParticleSystemComponent> WeakParticle = Particle;
+
 		GetWorld()->GetTimerManager().SetTimer(
 			DestroyParticleHandle,
-			[Particle]()
+			[WeakParticle]()
 			{
-				Particle->DestroyComponent();
+				if (WeakParticle.IsValid())
+				{
+					WeakParticle->DestroyComponent();
+				}
 			},
 			2.0f,
 			false
