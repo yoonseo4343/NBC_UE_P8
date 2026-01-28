@@ -31,6 +31,8 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "Health")
 	void AddHealth(float Amount);
 
+	void RollCamera();
+	void UpdateRollCamera();
 protected:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "health")
 	float MaxHealth;
@@ -60,12 +62,11 @@ protected:
 
 	void OnDeath();
 	void UpdateOverheadHP();
-
+	FTimerHandle RollTimerHandle;
+	FRotator RollTarget;
 
 private:
 	float NormalSpeed;
 	float SprintSpeedMultiplier;
 	float SprintSpeed;
-	int32 JumpCount;
-	bool JumpCheck;
 };

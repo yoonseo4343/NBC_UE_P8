@@ -12,9 +12,6 @@
 // Sets default values
 ASpartaCharacter::ASpartaCharacter()
 {
-	JumpCount = 0;
-	JumpCheck = false;
-	// Set this character to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = false;
 
 	SpringArmComp = CreateDefaultSubobject<USpringArmComponent>(TEXT("SpringArm"));
@@ -125,12 +122,9 @@ void ASpartaCharacter::Move(const FInputActionValue& value)
 
 void ASpartaCharacter::StartJump(const FInputActionValue& value)
 {
-	if (value.Get<bool>() and !JumpCheck)
+	if (value.Get<bool>())
 	{
 		Jump();
-		JumpCount += 1;
-		JumpCheck = true;
-		GEngine->AddOnScreenDebugMessage(-1, 2.0f, FColor::Red, FString::Printf(TEXT("Jump Count: %d"),JumpCount));
 	}
 }
 
@@ -139,7 +133,6 @@ void ASpartaCharacter::StopJump(const FInputActionValue& value)
 	if (!value.Get<bool>())
 	{
 		StopJumping();
-		JumpCheck = false;
 	}
 }
 
@@ -175,6 +168,50 @@ void ASpartaCharacter::AddHealth(float Amount)
 	Health= FMath::Clamp(Health + Amount, 0.0f, MaxHealth);
     UpdateOverheadHP();
 }
+
+void ASpartaCharacter::RollCamera()
+{
+	if (!CameraComp) return;
+    UE_LOG(LogTemp, Warning, TEXT("Roll Camera"));
+
+
+	RollTarget = CameraComp->GetRelativeRotation();
+	RollTarget.Roll += 180.f;
+
+	GetWorldTimerManager().SetTimer(
+		RollTimerHandle,
+        this,
+		&ASpartaCharacter::UpdateRollCamera,
+		0.016f,
+		true
+	);
+}
+void ASpartaCharacter::UpdateRollCamera()
+{
+	if (!CameraComp || !GetWorld())
+	{
+		GetWorldTimerManager().ClearTimer(RollTimerHandle);
+		return;
+	}
+
+	FRotator Cur = CameraComp->GetRelativeRotation();
+	FRotator NewRot = FMath::RInterpTo(
+		Cur,
+		RollTarget,
+		GetWorld()->GetDeltaSeconds(),
+		6.f
+	);
+
+	CameraComp->SetRelativeRotation(NewRot);
+
+	if (FMath::Abs(NewRot.Roll - RollTarget.Roll) < 0.5f)
+	{
+		CameraComp->SetRelativeRotation(RollTarget);
+		GetWorldTimerManager().ClearTimer(RollTimerHandle);
+
+	}
+}
+
 float ASpartaCharacter::TakeDamage(
 	float DamageAmount,
 	struct FDamageEvent const& DamageEvent,

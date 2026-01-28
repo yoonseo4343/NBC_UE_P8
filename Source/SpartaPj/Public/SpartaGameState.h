@@ -45,4 +45,10 @@ public:
 	void OnCoinCollected();
 	void EndLevel();
     void UpdateHUD();
+
+	//과제
+	void StartWave1();
+    void StartWave2();
+    void StartWave3();
+	void RollingCamera();
 };
