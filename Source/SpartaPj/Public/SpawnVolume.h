@@ -6,6 +6,7 @@
 #include "SpawnVolume.generated.h"
 
 class UBoxComponent;
+class AMineItem;
 UCLASS()
 class SPARTAPJ_API ASpawnVolume : public AActor
 {
@@ -22,10 +23,15 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Spawning")
 	UDataTable* ItemDataTable;
 
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Spawning")
+	TSubclassOf<AMineItem> MineClass;
+
 	UFUNCTION(BlueprintCallable,Category="Spawning")
 	AActor* SpawnRandomItem();
 
 	FItemSpawnRow* GetRandomItem() const;
 	AActor* SpawnItem(TSubclassOf<AActor> ItemClass);
 	FVector GetRandomPointInVolume() const;
+
+	AActor* SpawnMine(float Delay);
 };

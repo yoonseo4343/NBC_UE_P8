@@ -32,4 +32,6 @@ public:
 	virtual void ActivateItem(AActor* Activator) override;
 
 	void Explode();
+
+    void SetDelay(float NewDelay) { ExplosionDelay = NewDelay; }
 };

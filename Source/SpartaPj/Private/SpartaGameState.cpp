@@ -183,7 +183,7 @@ void ASpartaGameState::StartWave1()
         LevelTimerHandle,
         this,
         &ASpartaGameState::StartWave2,
-        20.0f,
+        10.0f,
         false
     );
 }
@@ -214,7 +214,7 @@ void ASpartaGameState::StartWave2()
         LevelTimerHandle,
         this,
         &ASpartaGameState::StartWave3,
-        20.0f,
+        10.0f,
         false
     );
 }
@@ -228,7 +228,7 @@ void ASpartaGameState::StartWave3()
     TArray<AActor*> FoundVolumes;
     UGameplayStatics::GetAllActorsOfClass(GetWorld(), ASpawnVolume::StaticClass(), FoundVolumes);
 
-    const int32 ItemToSpawn = 40;
+    const int32 ItemToSpawn = 100;
 
     for (int32 i = 0; i < ItemToSpawn; i++)
     {
@@ -237,7 +237,7 @@ void ASpartaGameState::StartWave3()
             ASpawnVolume* SpawnVolume = Cast<ASpawnVolume>(FoundVolumes[0]);
             if (SpawnVolume)
             {
-                AActor* SpawnedActor = SpawnVolume->SpawnRandomItem();
+                AActor* SpawnedActor = SpawnVolume->SpawnMine(2.0f-(0.5* CurrentLevelIndex));
             }
         }
     }
@@ -246,7 +246,7 @@ void ASpartaGameState::StartWave3()
         LevelTimerHandle,
         this,
         &ASpartaGameState::OnLevelTimeUp,
-        30.0f,
+        10.0f,
         false
     );
 }

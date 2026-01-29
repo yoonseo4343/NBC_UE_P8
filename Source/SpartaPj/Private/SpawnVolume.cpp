@@ -1,5 +1,6 @@
 #include "SpawnVolume.h"
 #include "Components/BoxComponent.h"
+#include "MineItem.h"
 
 ASpawnVolume::ASpawnVolume()
 {
@@ -22,6 +23,21 @@ FVector ASpawnVolume::GetRandomPointInVolume() const
 		FMath::FRandRange(-BoxExtent.Y, BoxExtent.Y),
 		FMath::FRandRange(-BoxExtent.Z, BoxExtent.Z)
 	);
+}
+
+AActor* ASpawnVolume::SpawnMine(float Delay)
+{
+	if (!MineClass) return nullptr;
+	AMineItem* Mine = GetWorld()->SpawnActor<AMineItem>(
+		MineClass,
+		GetRandomPointInVolume(),
+		FRotator::ZeroRotator
+	);
+	if (Mine)
+	{
+		Mine->SetDelay(Delay);
+    }
+	return Mine;
 }
 
 AActor* ASpawnVolume::SpawnItem(TSubclassOf<AActor> ItemClass)
