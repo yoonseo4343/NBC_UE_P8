@@ -126,6 +126,34 @@ void ASpartaPlayerController::ShowGameHUD()
     }
 }
 
+void ASpartaPlayerController::ShowGameWave2()
+{
+    UFunction* PlayAnimFunc = HUDWidgetInstance->FindFunction(FName("Wave2Anim"));
+    if (PlayAnimFunc)
+    {
+        HUDWidgetInstance->ProcessEvent(PlayAnimFunc, nullptr);
+        UE_LOG(LogTemp, Warning, TEXT("Wave2Anim Played"));
+    }
+}
+
+void ASpartaPlayerController::ShowGameWave3()
+{
+    UFunction* PlayAnimFunc = HUDWidgetInstance->FindFunction(FName("Wave3Anim"));
+    if (PlayAnimFunc)
+    {
+        HUDWidgetInstance->ProcessEvent(PlayAnimFunc, nullptr);
+    }
+}
+
+void ASpartaPlayerController::ShowLevelUp()
+{
+    UFunction* PlayAnimFunc = HUDWidgetInstance->FindFunction(FName("LevelUpAnim"));
+    if (PlayAnimFunc)
+    {
+        HUDWidgetInstance->ProcessEvent(PlayAnimFunc, nullptr);
+    }
+}
+
 void ASpartaPlayerController::StartGame()
 {
     if (USpartaGameInstance* SpartaGameInstance = Cast<USpartaGameInstance>(UGameplayStatics::GetGameInstance(this)))
@@ -136,3 +164,4 @@ void ASpartaPlayerController::StartGame()
     UGameplayStatics::OpenLevel(GetWorld(), FName("BasicLevel"));
     SetPause(false);
 }
+

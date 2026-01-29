@@ -47,6 +47,15 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "HUD")
 	void ShowGameHUD();
 
+	UFUNCTION(BlueprintCallable, Category = "HUD")
+	void ShowGameWave2();
+
+	UFUNCTION(BlueprintCallable, Category = "HUD")
+	void ShowGameWave3();
+
+	UFUNCTION(BlueprintCallable, Category = "HUD")
+	void ShowLevelUp();
+
 	UFUNCTION(BlueprintCallable, Category = "Menu")
 	void StartGame();
 protected:
