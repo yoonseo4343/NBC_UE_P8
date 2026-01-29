@@ -6,7 +6,6 @@
 
 class USpringArmComponent;
 class UCameraComponent;
-class UWidgetComponent;
 struct FInputActionValue;
 
 UCLASS()
@@ -15,16 +14,12 @@ class SPARTAPJ_API ASpartaCharacter : public ACharacter
 	GENERATED_BODY()
 
 public:
-	// Sets default values for this character's properties
 	ASpartaCharacter();
 
 	UPROPERTY(visibleAnywhere, BlueprintReadOnly, Category = "Camera")
 	USpringArmComponent* SpringArmComp;
 	UPROPERTY(visibleAnywhere, BlueprintReadOnly, Category = "Camera")
 	UCameraComponent* CameraComp;
-
-    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "UI")
-	UWidgetComponent* OverheadWidget;
 
 	UFUNCTION(BlueprintPure,Category="Health")
 	float GetHealth() const;
@@ -61,7 +56,7 @@ protected:
     void StopSprint(const FInputActionValue& value);
 
 	void OnDeath();
-	void UpdateOverheadHP();
+	void UpdateHP();
 	FTimerHandle RollTimerHandle;
 	FRotator RollTarget;
 

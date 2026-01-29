@@ -7,7 +7,8 @@
 #include "SpartaGameState.h"
 #include "Kismet/GameplayStatics.h"
 #include "Components/WidgetComponent.h"
-#include "Components/TextBlock.h"
+#include "Blueprint/UserWidget.h"
+#include "Components/ProgressBar.h"
 
 // Sets default values
 ASpartaCharacter::ASpartaCharacter()
@@ -23,10 +24,6 @@ ASpartaCharacter::ASpartaCharacter()
 	CameraComp->SetupAttachment(SpringArmComp, USpringArmComponent::SocketName);
 	CameraComp->bUsePawnControlRotation = false;
 
-    OverheadWidget = CreateDefaultSubobject<UWidgetComponent>(TEXT("OverheadWidget"));
-	OverheadWidget->SetupAttachment(GetMesh());
-    OverheadWidget->SetWidgetSpace(EWidgetSpace::Screen);
-
 	NormalSpeed = 600.0f;
 	SprintSpeedMultiplier = 2.0;
 	SprintSpeed=NormalSpeed*SprintSpeedMultiplier;
@@ -40,10 +37,9 @@ void ASpartaCharacter::BeginPlay()
 {
 	Super::BeginPlay();
 	
-    UpdateOverheadHP();
+    UpdateHP();
 }
 
-// Called to bind functionality to input
 void ASpartaCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 {
 	Super::SetupPlayerInputComponent(PlayerInputComponent);
@@ -166,7 +162,7 @@ float ASpartaCharacter::GetHealth() const
 void ASpartaCharacter::AddHealth(float Amount)
 {
 	Health= FMath::Clamp(Health + Amount, 0.0f, MaxHealth);
-    UpdateOverheadHP();
+    UpdateHP();
 }
 
 void ASpartaCharacter::RollCamera()
@@ -221,7 +217,7 @@ float ASpartaCharacter::TakeDamage(
 	float ActualDamage = Super::TakeDamage(DamageAmount, DamageEvent, EventInstigator, DamageCauser);
 
 	Health = FMath::Clamp(Health - DamageAmount, 0.0f, MaxHealth);
-	UpdateOverheadHP();
+	UpdateHP();
 
 
 	if (Health <= 0.0f)
@@ -242,15 +238,21 @@ void ASpartaCharacter::OnDeath()
 	UE_LOG(LogTemp, Warning, TEXT("Death.."));
 }
 
-void ASpartaCharacter::UpdateOverheadHP()
+void ASpartaCharacter::UpdateHP()
 {
-	if (!OverheadWidget) return;
-
-    UUserWidget* OverheadWidgetInstance = OverheadWidget->GetUserWidgetObject();
-    if (!OverheadWidgetInstance) return;
-
-	if (UTextBlock* HPText = Cast<UTextBlock>(OverheadWidgetInstance->GetWidgetFromName(TEXT("OverHeadHP"))))
+	// 머리 위 > HUD 체력바 변경
+	if (APlayerController* PlayerController = GetWorld()->GetFirstPlayerController())
 	{
-        HPText->SetText(FText::FromString(FString::Printf(TEXT("%.0f / %.0f"), Health, MaxHealth)));
+		if (ASpartaPlayerController* SpartaPlayerController = Cast<ASpartaPlayerController>(PlayerController))
+		{
+			if (UUserWidget* HUDWidget = SpartaPlayerController->GetHUDWidget())
+			{
+				//if (!HUDWidget) return;
+				if (UProgressBar* HPBar = Cast<UProgressBar>(HUDWidget->GetWidgetFromName(TEXT("HPBar"))))
+				{
+					HPBar->SetPercent(Health / MaxHealth);
+				}
+			}
+		}
 	}
 }
