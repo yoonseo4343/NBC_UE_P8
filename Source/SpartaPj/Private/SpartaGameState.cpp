@@ -166,7 +166,7 @@ void ASpartaGameState::StartWave1()
     TArray<AActor*> FoundVolumes;
     UGameplayStatics::GetAllActorsOfClass(GetWorld(), ASpawnVolume::StaticClass(), FoundVolumes);
 
-    const int32 ItemToSpawn = 40;
+    const int32 ItemToSpawn = 60;
 
     for (int32 i = 0; i < ItemToSpawn; i++)
     {
@@ -200,7 +200,7 @@ void ASpartaGameState::StartWave2()
     TArray<AActor*> FoundVolumes;
     UGameplayStatics::GetAllActorsOfClass(GetWorld(), ASpawnVolume::StaticClass(), FoundVolumes);
 
-    const int32 ItemToSpawn = 40;
+    const int32 ItemToSpawn = 60;
 
     for (int32 i = 0; i < ItemToSpawn; i++)
     {
@@ -243,7 +243,7 @@ void ASpartaGameState::StartWave3()
     TArray<AActor*> FoundVolumes;
     UGameplayStatics::GetAllActorsOfClass(GetWorld(), ASpawnVolume::StaticClass(), FoundVolumes);
 
-    const int32 ItemToSpawn = 100;
+    const int32 ItemToSpawn = 130;
 
     for (int32 i = 0; i < ItemToSpawn; i++)
     {
