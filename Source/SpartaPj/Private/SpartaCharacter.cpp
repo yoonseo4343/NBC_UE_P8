@@ -9,6 +9,7 @@
 #include "Components/WidgetComponent.h"
 #include "Blueprint/UserWidget.h"
 #include "Components/ProgressBar.h"
+#include "Components/PostProcessComponent.h"
 
 // Sets default values
 ASpartaCharacter::ASpartaCharacter()
@@ -31,6 +32,11 @@ ASpartaCharacter::ASpartaCharacter()
 	GetCharacterMovement()->MaxWalkSpeed = NormalSpeed;
 	MaxHealth = 100.0f;
 	Health = MaxHealth;
+
+	PostProcessComp = CreateDefaultSubobject<UPostProcessComponent>(TEXT("PostProcess"));
+    PostProcessComp->SetupAttachment(CameraComp);
+	PostProcessComp->bUnbound = true;
+	PostProcessComp->BlendWeight = 0.f;
 }
 
 void ASpartaCharacter::BeginPlay()
@@ -163,6 +169,40 @@ void ASpartaCharacter::AddHealth(float Amount)
 {
 	Health= FMath::Clamp(Health + Amount, 0.0f, MaxHealth);
     UpdateHP();
+}
+
+void ASpartaCharacter::DrinkPoison(float Duration, float Damage)
+{
+	UE_LOG(LogTemp, Warning, TEXT("Poison"));
+	if (!PostProcessComp) return;
+	
+    PostProcessComp->BlendWeight = 1.0f;
+	GetWorldTimerManager().SetTimer(
+		PoisonTimerHandle,
+		[this,Damage]()
+		{
+			UGameplayStatics::ApplyDamage(
+				this,
+				Damage,
+				nullptr,
+				this,
+				UDamageType::StaticClass()
+			);
+		},
+		1.0f,
+		true
+    );
+	GetWorldTimerManager().SetTimer(
+		BlurTimerHandle,
+		[this]()
+		{
+			PostProcessComp->BlendWeight = 0.f;
+            GetWorldTimerManager().ClearTimer(PoisonTimerHandle);
+			UE_LOG(LogTemp, Warning, TEXT("Poison Effect Ended."));
+		},
+		Duration,
+		false
+	);
 }
 
 void ASpartaCharacter::RollCamera()

@@ -6,6 +6,7 @@
 
 class USpringArmComponent;
 class UCameraComponent;
+class UPostProcessComponent;
 struct FInputActionValue;
 
 UCLASS()
@@ -21,10 +22,17 @@ public:
 	UPROPERTY(visibleAnywhere, BlueprintReadOnly, Category = "Camera")
 	UCameraComponent* CameraComp;
 
+	UPROPERTY(visibleAnywhere, BlueprintReadOnly, Category = "Camera")
+	UPostProcessComponent* PostProcessComp;
+
 	UFUNCTION(BlueprintPure,Category="Health")
 	float GetHealth() const;
 	UFUNCTION(BlueprintCallable, Category = "Health")
 	void AddHealth(float Amount);
+
+
+	UFUNCTION(BlueprintCallable, Category = "Debuff")
+	void DrinkPoison(float Duration, float Damage);
 
 	void RollCamera();
 	void UpdateRollCamera();
@@ -58,6 +66,8 @@ protected:
 	void OnDeath();
 	void UpdateHP();
 	FTimerHandle RollTimerHandle;
+	FTimerHandle BlurTimerHandle;
+    FTimerHandle PoisonTimerHandle;
 	FRotator RollTarget;
 
 private:
