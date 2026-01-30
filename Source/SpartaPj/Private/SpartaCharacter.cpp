@@ -28,6 +28,7 @@ ASpartaCharacter::ASpartaCharacter()
 	NormalSpeed = 600.0f;
 	SprintSpeedMultiplier = 2.0;
 	SprintSpeed=NormalSpeed*SprintSpeedMultiplier;
+	bIsSlowed = false;
 
 	GetCharacterMovement()->MaxWalkSpeed = NormalSpeed;
 	MaxHealth = 100.0f;
@@ -148,7 +149,7 @@ void ASpartaCharacter::Look(const FInputActionValue& value)
 
 void ASpartaCharacter::StartSprint(const FInputActionValue& value)
 {
-	if (GetCharacterMovement())
+	if (GetCharacterMovement() && !bIsSlowed)
 	{
 		GetCharacterMovement()->MaxWalkSpeed = SprintSpeed;
 	}
@@ -173,36 +174,66 @@ void ASpartaCharacter::AddHealth(float Amount)
 
 void ASpartaCharacter::DrinkPoison(float Duration, float Damage)
 {
-	UE_LOG(LogTemp, Warning, TEXT("Poison"));
 	if (!PostProcessComp) return;
-	
+	UE_LOG(LogTemp, Warning, TEXT("Poison"));
+
     PostProcessComp->BlendWeight = 1.0f;
+
+    PoisonDamageAmount = Damage;
+
 	GetWorldTimerManager().SetTimer(
 		PoisonTimerHandle,
-		[this,Damage]()
-		{
-			UGameplayStatics::ApplyDamage(
-				this,
-				Damage,
-				nullptr,
-				this,
-				UDamageType::StaticClass()
-			);
-		},
+		this,
+        &ASpartaCharacter::PoisonDamage,
 		1.0f,
 		true
     );
 	GetWorldTimerManager().SetTimer(
 		BlurTimerHandle,
-		[this]()
-		{
-			PostProcessComp->BlendWeight = 0.f;
-            GetWorldTimerManager().ClearTimer(PoisonTimerHandle);
-			UE_LOG(LogTemp, Warning, TEXT("Poison Effect Ended."));
-		},
+		this,
+		&ASpartaCharacter::PoisonEnd,
 		Duration,
 		false
 	);
+}
+
+void ASpartaCharacter::PoisonDamage()
+{
+	UGameplayStatics::ApplyDamage(
+		this,
+		PoisonDamageAmount,
+		nullptr,
+		this,
+		UDamageType::StaticClass()
+	);
+}
+
+void ASpartaCharacter::PoisonEnd()
+{
+	PostProcessComp->BlendWeight = 0.f;
+	GetWorldTimerManager().ClearTimer(PoisonTimerHandle);
+	UE_LOG(LogTemp, Warning, TEXT("Poison Potion Ended."));
+}
+
+void ASpartaCharacter::Slowed(float Duration, float SpeedMultiplier)
+{
+	UE_LOG(LogTemp, Warning, TEXT("Slowed."));
+	GetCharacterMovement()->MaxWalkSpeed *=SpeedMultiplier;
+    bIsSlowed = true;
+	GetWorldTimerManager().SetTimer(
+		SlowedTimerHandle,
+		this,
+        &ASpartaCharacter::SlowedEnd,
+		Duration,
+		false
+	);
+}
+
+void ASpartaCharacter::SlowedEnd()
+{
+	bIsSlowed = false;
+	GetCharacterMovement()->MaxWalkSpeed = NormalSpeed;
+	UE_LOG(LogTemp, Warning, TEXT("Slowed Potion Ended."));
 }
 
 void ASpartaCharacter::RollCamera()

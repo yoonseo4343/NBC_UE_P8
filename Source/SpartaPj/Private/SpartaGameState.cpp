@@ -166,7 +166,7 @@ void ASpartaGameState::StartWave1()
     TArray<AActor*> FoundVolumes;
     UGameplayStatics::GetAllActorsOfClass(GetWorld(), ASpawnVolume::StaticClass(), FoundVolumes);
 
-    const int32 ItemToSpawn = 60;
+    const int32 ItemToSpawn = 100;
 
     for (int32 i = 0; i < ItemToSpawn; i++)
     {
@@ -176,10 +176,6 @@ void ASpartaGameState::StartWave1()
             if (SpawnVolume)
             {
                 AActor* SpawnedActor = SpawnVolume->SpawnRandomItem();
-                /*if (SpawnedActor && SpawnedActor->IsA(ACoinItem::StaticClass()))
-                {
-                    SpawnedCoinCount++;
-                }*/
             }
         }
     }
@@ -188,7 +184,7 @@ void ASpartaGameState::StartWave1()
         LevelTimerHandle,
         this,
         &ASpartaGameState::StartWave2,
-        10.0f,
+        20.0f,
         false
     );
 }
@@ -200,7 +196,7 @@ void ASpartaGameState::StartWave2()
     TArray<AActor*> FoundVolumes;
     UGameplayStatics::GetAllActorsOfClass(GetWorld(), ASpawnVolume::StaticClass(), FoundVolumes);
 
-    const int32 ItemToSpawn = 60;
+    const int32 ItemToSpawn = 80;
 
     for (int32 i = 0; i < ItemToSpawn; i++)
     {
@@ -229,7 +225,7 @@ void ASpartaGameState::StartWave2()
         LevelTimerHandle,
         this,
         &ASpartaGameState::StartWave3,
-        10.0f,
+        20.0f,
         false
     );
 }
@@ -243,7 +239,7 @@ void ASpartaGameState::StartWave3()
     TArray<AActor*> FoundVolumes;
     UGameplayStatics::GetAllActorsOfClass(GetWorld(), ASpawnVolume::StaticClass(), FoundVolumes);
 
-    const int32 ItemToSpawn = 130;
+    const int32 ItemToSpawn = 150;
 
     for (int32 i = 0; i < ItemToSpawn; i++)
     {
@@ -270,7 +266,7 @@ void ASpartaGameState::StartWave3()
         LevelTimerHandle,
         this,
         &ASpartaGameState::OnLevelTimeUp,
-        10.0f,
+        30.0f,
         false
     );
 }

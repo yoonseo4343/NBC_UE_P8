@@ -33,6 +33,14 @@ public:
 
 	UFUNCTION(BlueprintCallable, Category = "Debuff")
 	void DrinkPoison(float Duration, float Damage);
+	UFUNCTION(BlueprintCallable, Category = "Debuff")
+	void PoisonDamage();
+	UFUNCTION(BlueprintCallable, Category = "Debuff")
+	void PoisonEnd();
+	UFUNCTION(BlueprintCallable, Category = "Debuff")
+    void Slowed(float Duration, float SpeedMultiplier);
+	UFUNCTION(BlueprintCallable, Category = "Debuff")
+	void SlowedEnd();
 
 	void RollCamera();
 	void UpdateRollCamera();
@@ -68,10 +76,13 @@ protected:
 	FTimerHandle RollTimerHandle;
 	FTimerHandle BlurTimerHandle;
     FTimerHandle PoisonTimerHandle;
+	FTimerHandle SlowedTimerHandle;
 	FRotator RollTarget;
 
 private:
 	float NormalSpeed;
 	float SprintSpeedMultiplier;
 	float SprintSpeed;
+    bool bIsSlowed;
+    float PoisonDamageAmount;
 };

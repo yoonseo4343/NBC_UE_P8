@@ -128,6 +128,7 @@ void ASpartaPlayerController::ShowGameHUD()
 
 void ASpartaPlayerController::ShowGameWave2()
 {
+    if (HUDWidgetInstance == nullptr) return;
     UFunction* PlayAnimFunc = HUDWidgetInstance->FindFunction(FName("Wave2Anim"));
     if (PlayAnimFunc)
     {
@@ -138,6 +139,7 @@ void ASpartaPlayerController::ShowGameWave2()
 
 void ASpartaPlayerController::ShowGameWave3()
 {
+    if (HUDWidgetInstance == nullptr) return;
     UFunction* PlayAnimFunc = HUDWidgetInstance->FindFunction(FName("Wave3Anim"));
     if (PlayAnimFunc)
     {
@@ -147,6 +149,7 @@ void ASpartaPlayerController::ShowGameWave3()
 
 void ASpartaPlayerController::ShowLevelUp()
 {
+    if (HUDWidgetInstance == nullptr) return;
     UFunction* PlayAnimFunc = HUDWidgetInstance->FindFunction(FName("LevelUpAnim"));
     if (PlayAnimFunc)
     {
